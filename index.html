@@ -358,6 +358,11 @@
       padding-left: 15px;
     }
 
+    /* Firma de aceptación (Visible solo al imprimir) */
+    .print-signatures {
+      display: none;
+    }
+
     /* Botones de Acción */
     .actions {
       margin-top: 30px;
@@ -399,9 +404,9 @@
     }
 
     /* =========================================================
-       DISEÑO RESPONSIVO MÓVIL AVANZADO (TRANSFORMA TABLA EN TARJETAS)
+       DISEÑO RESPONSIVO MÓVIL (SOLO EN PANTALLA: screen)
        ========================================================= */
-    @media (max-width: 768px) {
+    @media screen and (max-width: 768px) {
       body {
         padding: 8px;
       }
@@ -441,14 +446,11 @@
         justify-content: center;
       }
 
-      /* Transformación de la tabla en tarjetas responsivas para móvil */
+      /* Transformación de la tabla en tarjetas responsivas en pantalla móvil */
       table, thead, tbody, th, td, tr {
         display: block;
       }
       thead {
-        display: none; /* Ocultamos los encabezados horizontales de la tabla */
-      }
-      tr#emptyRow {
         display: none;
       }
       #itemsBody tr {
@@ -472,7 +474,6 @@
         justify-content: flex-end;
         padding-top: 10px;
       }
-      /* Etiquetas automáticas para cada campo en la tarjeta móvil */
       #itemsBody td:nth-child(1)::before { content: "Cantidad:"; font-weight: 600; color: var(--text-muted); font-size: 13px; }
       #itemsBody td:nth-child(2) { flex-direction: column; align-items: stretch; text-align: left !important; }
       #itemsBody td:nth-child(2)::before { content: "Descripción:"; font-weight: 600; color: var(--text-muted); font-size: 13px; margin-bottom: 4px; }
@@ -485,32 +486,230 @@
       }
     }
 
-    /* Estilos para impresión / PDF */
+    /* =========================================================
+       FORMATO EJECUTIVO DE IMPRESIÓN / PDF (DOCUMENTO CARTA)
+       ========================================================= */
     @media print {
+      @page {
+        size: letter;
+        margin: 14mm 15mm;
+      }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
       body {
-        background: white;
-        padding: 0;
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
       }
       .container {
-        box-shadow: none;
-        border: none;
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
+      /* Ocultar interfaz de usuario */
       .pwa-bar, .actions, .btn-add, .btn-danger, th:last-child, td:last-child, .options-box {
         display: none !important;
       }
+      /* Forzar encabezado horizontal formal */
+      header {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        border-bottom: 2.5px solid var(--primary) !important;
+        padding-bottom: 14px !important;
+        margin-bottom: 18px !important;
+      }
+      .company-info h1 {
+        font-size: 21px !important;
+        color: var(--primary) !important;
+      }
+      .company-info p {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+      .quote-details {
+        display: block !important;
+        text-align: right !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+      }
+      .quote-details h2 {
+        font-size: 18px !important;
+        letter-spacing: 1px !important;
+      }
+      /* Limpiar todos los inputs para que parezcan texto impreso */
       input {
         border: none !important;
         background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-family: inherit !important;
+        color: #0f172a !important;
+        box-shadow: none !important;
+        outline: none !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
       }
-      .quote-details {
-        border: none !important;
-        background: transparent !important;
+      input::placeholder {
+        color: transparent !important;
       }
       .quote-details input {
-        text-align: right;
+        text-align: right !important;
+        width: auto !important;
+        max-width: 110px !important;
+        font-weight: 600 !important;
+        font-size: 12px !important;
+      }
+      /* Sección de cliente en columnas compactas */
+      .client-section {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        border-left: 4px solid var(--accent) !important;
+        padding: 10px 14px !important;
+        margin-bottom: 18px !important;
+        border-radius: 4px !important;
+      }
+      .form-group label {
+        font-size: 9px !important;
+        color: #475569 !important;
+        margin-bottom: 2px !important;
+      }
+      .form-group input {
+        font-size: 12px !important;
+        font-weight: 600 !important;
+      }
+      /* Forzar tabla formal aunque se imprima desde móvil */
+      table {
+        display: table !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-bottom: 14px !important;
+      }
+      thead {
+        display: table-header-group !important;
+      }
+      tbody {
+        display: table-row-group !important;
+      }
+      tr {
+        display: table-row !important;
+        page-break-inside: avoid !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      tr:nth-child(even) {
+        background-color: #f8fafc !important;
+      }
+      th {
+        display: table-cell !important;
+        background-color: var(--primary) !important;
+        color: white !important;
+        padding: 8px 10px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+      }
+      th:nth-child(1), td:nth-child(1) { width: 8% !important; text-align: center !important; }
+      th:nth-child(2), td:nth-child(2) { width: 56% !important; text-align: left !important; }
+      th:nth-child(3), td:nth-child(3) { width: 18% !important; text-align: right !important; }
+      th:nth-child(4), td:nth-child(4) { width: 18% !important; text-align: right !important; }
+      td {
+        display: table-cell !important;
+        padding: 8px 10px !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+        font-size: 12px !important;
+        vertical-align: middle !important;
+      }
+      td::before {
+        display: none !important;
+      }
+      input.qty {
+        text-align: center !important;
+        width: 100% !important;
+        max-width: none !important;
+        font-size: 12px !important;
+      }
+      input.desc-input {
+        text-align: left !important;
+        width: 100% !important;
+        font-size: 12px !important;
+      }
+      input.price {
+        text-align: right !important;
+        width: 100% !important;
+        max-width: none !important;
+        font-size: 12px !important;
+      }
+      .row-subtotal {
+        font-size: 12px !important;
+        color: #0f172a !important;
+      }
+      /* Bloque de totales alineado a la derecha */
+      .bottom-section {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-end !important;
+        margin-top: 10px !important;
+        margin-bottom: 20px !important;
+        page-break-inside: avoid !important;
+      }
+      .totals-box {
+        width: 260px !important;
+        max-width: 260px !important;
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 10px 14px !important;
+        border-radius: 4px !important;
+      }
+      .total-row {
+        padding: 4px 0 !important;
+        font-size: 12px !important;
+      }
+      .total-row.grand-total {
+        border-top: 2px solid var(--primary) !important;
+        margin-top: 6px !important;
+        padding-top: 8px !important;
+        font-size: 15px !important;
+        color: var(--primary) !important;
+      }
+      /* Condiciones y firmas */
+      .terms {
+        border-top: 1px solid #cbd5e1 !important;
+        padding-top: 12px !important;
+        font-size: 10px !important;
+        page-break-inside: avoid !important;
+      }
+      .terms h4 {
+        font-size: 11px !important;
+        margin-bottom: 4px !important;
+      }
+      .terms ul {
+        line-height: 1.45 !important;
+      }
+      .print-signatures {
+        display: flex !important;
+        justify-content: space-around !important;
+        margin-top: 45px !important;
+        page-break-inside: avoid !important;
+      }
+      .sig-box {
+        width: 210px;
+        border-top: 1px solid #475569;
+        text-align: center;
+        padding-top: 6px;
+        font-size: 10px;
+        color: #475569;
       }
     }
   </style>
@@ -621,6 +820,12 @@
         <li>No incluye trabajos de obra civil ni canalización especial no especificada.</li>
         <li>Esta cotización tiene una vigencia de 15 días naturales a partir de la fecha de emisión.</li>
       </ul>
+    </div>
+
+    <!-- Líneas de firma (Visibles únicamente al imprimir / guardar en PDF) -->
+    <div class="print-signatures">
+      <div class="sig-box">Elaboró<br><strong>CyberNet Servicios Técnicos</strong></div>
+      <div class="sig-box">Aceptación del Cliente<br>Nombre y Firma</div>
     </div>
 
     <!-- Acciones -->
@@ -759,7 +964,7 @@
     // Registro del Service Worker inline
     if ('serviceWorker' in navigator) {
       const swCode = `
-        const CACHE_NAME = 'cotizador-pwa-v2';
+        const CACHE_NAME = 'cotizador-pwa-v3';
         self.addEventListener('install', (event) => {
           self.skipWaiting();
           event.waitUntil(
@@ -794,8 +999,6 @@
     // Inicialización
     window.onload = () => {
       loadCompanyData();
-      defaultItems.setItem ? null : null;
-      // Si no hay datos guardados de empresa previamente, carga los predeterminados con el nuevo correo/tel
       if (!localStorage.getItem('cybernet_company_info')) {
         document.getElementById('compContact').innerHTML = 'Contacto: cybernetcuauhtemoc@gmail.com | Tel: (629) 101-2012';
       }
