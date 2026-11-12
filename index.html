@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cotizador Pro">
+  <title>Cotizador Profesional - Servicios Técnicos</title>
+
+  <!-- Icono SVG embebido para PWA y Apple Touch -->
+  <link id="app-icon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Cpath d='M140 110h232v292H140z' fill='%232563eb'/%3E%3Cpath d='M180 170h152v24H180zm0 60h152v24H180zm0 60h96v24h-96z' fill='%23ffffff'/%3E%3Ccircle cx='350' cy='350' r='70' fill='%2310b981'/%3E%3Cpath d='M320 350l20 20 40-40' stroke='%23ffffff' stroke-width='16' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Cpath d='M140 110h232v292H140z' fill='%232563eb'/%3E%3Cpath d='M180 170h152v24H180zm0 60h152v24H180zm0 60h96v24h-96z' fill='%23ffffff'/%3E%3C/svg%3E">
+  <link id="manifest-link" rel="manifest">
+
+  <script>
+    // Generación dinámica del Manifest en un solo archivo
+    const iconSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Cpath d='M140 110h232v292H140z' fill='%232563eb'/%3E%3Cpath d='M180 170h152v24H180zm0 60h152v24H180zm0 60h96v24h-96z' fill='%23ffffff'/%3E%3Ccircle cx='350' cy='350' r='70' fill='%2310b981'/%3E%3Cpath d='M320 350l20 20 40-40' stroke='%23ffffff' stroke-width='16' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
+    const manifestData = {
+      name: "Cotizador Profesional - Servicios Técnicos",
+      short_name: "Cotizador",
+      description: "Generador de cotizaciones técnicas profesional",
+      start_url: window.location.href,
+      display: "standalone",
+      background_color: "#f8fafc",
+      theme_color: "#0f172a",
+      icons: [
+        { src: iconSvg, sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
+        { src: iconSvg, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+      ]
+    };
+    const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+    document.getElementById('manifest-link').setAttribute('href', URL.createObjectURL(manifestBlob));
+  </script>
+
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #334155;
+      --text-muted: #64748b;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    /* Banner PWA */
+    .pwa-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--primary);
+    }
+
+    .btn-install {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      display: none;
+    }
+
+    .btn-install:hover {
+      background: #1e293b;
+    }
+
+    /* Header y Logo */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .company-info h1 {
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .company-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .quote-details {
+      text-align: right;
+    }
+
+    .quote-details h2 {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+
+    .quote-details label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .quote-details input {
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 130px;
+      text-align: right;
+    }
+
+    /* Datos del Cliente */
+    .client-section {
+      background: #f1f5f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .form-group input {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Tabla de Conceptos */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 600px;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: white;
+      padding: 12px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    input.desc-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    input.num-input {
+      width: 90px;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-align: right;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-add {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Sección inferior (IVA y Totales) */
+    .bottom-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .options-box {
+      background: #f1f5f9;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 250px;
+    }
+
+    .options-box label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .options-box input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .totals-box {
+      width: 100%;
+      max-width: 320px;
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .total-row.grand-total {
+      border-top: 2px solid var(--border);
+      margin-top: 8px;
+      padding-top: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    /* Términos y Condiciones */
+    .terms {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .terms h4 {
+      color: var(--primary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .terms ul {
+      list-style: inside disc;
+      line-height: 1.6;
+    }
+
+    /* Botones de Acción (Ocultos al Imprimir) */
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-clear {
+      background: #64748b;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn-clear:hover {
+      background: #475569;
+    }
+
+    .btn-print {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+
+    .btn-print:hover {
+      background: #059669;
+    }
+
+    /* Estilos para impresión / PDF */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+      }
+      .pwa-bar, .actions, .btn-add, .btn-danger, th:last-child, td:last-child, .options-box {
+        display: none !important;
+      }
+      input {
+        border: none !important;
+        background: transparent !important;
+      }
+      .quote-details input {
+        text-align: right;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Barra de estado e instalación PWA -->
+    <div class="pwa-bar" id="pwaBar">
+      <span id="pwaStatus">Listo para trabajar sin conexión</span>
+      <button type="button" class="btn-install" id="installBtn">📲 Instalar App</button>
+    </div>
+
+    <!-- Encabezado de la Empresa -->
+    <header>
+      <div class="company-info">
+        <h1 id="compName" contenteditable="true" onblur="saveCompanyData()">CyberNet Servicios Técnicos</h1>
+        <p id="compDesc" contenteditable="true" onblur="saveCompanyData()">CCTV | Controles de Acceso | Redes | Cableado Estructurado</p>
+        <p id="compContact" contenteditable="true" onblur="saveCompanyData()">Contacto: soporte@tuempresa.com | Tel: (625) 000-0000</p>
+      </div>
+      <div class="quote-details">
+        <h2>COTIZACIÓN</h2>
+        <div>
+          <label>Folio #:</label>
+          <input type="text" id="folio" value="COT-1001">
+        </div>
+        <div style="margin-top: 5px;">
+          <label>Fecha:</label>
+          <input type="date" id="fecha">
+        </div>
+      </div>
+    </header>
+
+    <!-- Datos del Cliente -->
+    <div class="client-section">
+      <div class="form-group">
+        <label>Cliente / Empresa:</label>
+        <input type="text" id="clientName" placeholder="Ej. Empresa SA de CV">
+      </div>
+      <div class="form-group">
+        <label>Contacto Principal:</label>
+        <input type="text" id="clientContact" placeholder="Ej. Ing. Juan Pérez">
+      </div>
+      <div class="form-group">
+        <label>Teléfono / Correo:</label>
+        <input type="text" id="clientInfo" placeholder="contacto@cliente.com">
+      </div>
+    </div>
+
+    <!-- Tabla de Productos y Servicios -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 10%;">Cant.</th>
+            <th style="width: 50%;">Descripción del Equipo / Servicio</th>
+            <th style="width: 18%;">P. Unitario ($)</th>
+            <th style="width: 15%;">Subtotal ($)</th>
+            <th style="width: 7%;">Acción</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <!-- Las filas se agregan mediante JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <button type="button" class="btn-add" onclick="addRow()">+ Agregar Concepto</button>
+
+    <!-- Sección de Opciones de IVA y Totales -->
+    <div class="bottom-section">
+      <div class="options-box">
+        <label>
+          <input type="checkbox" id="ivaCheck" checked onchange="calculateTotals()"> 
+          Aplicar IVA (16%)
+        </label>
+        <p style="font-size: 11px; color: var(--text-muted);">Marque o desmarque la casilla para incluir o excluir el impuesto de la cotización.</p>
+      </div>
+
+      <div class="totals-box">
+        <div class="total-row">
+          <span>Subtotal:</span>
+          <span id="subtotalDisplay">$0.00</span>
+        </div>
+        <div class="total-row" id="ivaRowContainer">
+          <span>IVA (16%):</span>
+          <span id="ivaDisplay">$0.00</span>
+        </div>
+        <div class="total-row grand-total">
+          <span>Total:</span>
+          <span id="totalDisplay">$0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Términos Técnicos y Comerciales -->
+    <div class="terms" contenteditable="true">
+      <h4>Condiciones del Servicio</h4>
+      <ul>
+        <li>Precios expresados en Moneda Nacional (MXN).</li>
+        <li>50% de anticipo al aceptar la cotización y 50% al finalizar la entrega del servicio.</li>
+        <li>1 año de garantía por defectos de fábrica en equipos y 90 días en mano de obra.</li>
+        <li>No incluye trabajos de obra civil ni canalización especial no especificada.</li>
+        <li>Esta cotización tiene una vigencia de 15 días naturales a partir de la fecha de emisión.</li>
+      </ul>
+    </div>
+
+    <!-- Acciones -->
+    <div class="actions">
+      <button type="button" class="btn-clear" onclick="clearQuote()">Nueva Cotización</button>
+      <button type="button" class="btn-print" onclick="window.print()">Imprimir / Guardar en PDF</button>
+    </div>
+
+  </div>
+
+  <script>
+    // 1. Establecer fecha actual
+    document.getElementById('fecha').valueAsDate = new Date();
+
+    // 2. Conceptos predeterminados
+    const defaultItems = [
+      { qty: 4, desc: 'Cámara Turret IP 4MP Hikvision / Dahua', price: 650.00 },
+      { qty: 1, desc: 'NVR 4 Canales PoE 4K con Disco Duro 1TB', price: 2800.00 },
+      { qty: 1, desc: 'Instalación, Configuración de red y Peinado de Rack', price: 1500.00 }
+    ];
+
+    function formatCurrency(amount) {
+      return '$' + amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function addRow(qty = 1, desc = '', price = 0) {
+      const tbody = document.getElementById('itemsBody');
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td><input type="number" class="num-input qty" value="${qty}" min="1" oninput="calculateTotals()"></td>
+        <td><input type="text" class="desc-input desc" value="${desc}" placeholder="Descripción del concepto..."></td>
+        <td><input type="number" class="num-input price" value="${price}" step="0.01" min="0" oninput="calculateTotals()"></td>
+        <td style="text-align: right; font-weight: 600;" class="row-subtotal">$0.00</td>
+        <td style="text-align: center;"><button type="button" class="btn-danger" onclick="removeRow(this)">✕</button></td>
+      `;
+
+      tbody.appendChild(tr);
+      calculateTotals();
+    }
+
+    function removeRow(btn) {
+      const row = btn.closest('tr');
+      row.remove();
+      calculateTotals();
+    }
+
+    function calculateTotals() {
+      const rows = document.querySelectorAll('#itemsBody tr');
+      let subtotalGeneral = 0;
+
+      rows.forEach(row => {
+        const qty = parseFloat(row.querySelector('.qty').value) || 0;
+        const price = parseFloat(row.querySelector('.price').value) || 0;
+        const rowSubtotal = qty * price;
+
+        row.querySelector('.row-subtotal').textContent = formatCurrency(rowSubtotal);
+        subtotalGeneral += rowSubtotal;
+      });
+
+      const applyIva = document.getElementById('ivaCheck').checked;
+      const ivaRowContainer = document.getElementById('ivaRowContainer');
+      
+      let iva = 0;
+      let total = subtotalGeneral;
+
+      if (applyIva) {
+        iva = subtotalGeneral * 0.16;
+        total = subtotalGeneral + iva;
+        ivaRowContainer.style.display = 'flex';
+      } else {
+        ivaRowContainer.style.display = 'none';
+      }
+
+      document.getElementById('subtotalDisplay').textContent = formatCurrency(subtotalGeneral);
+      document.getElementById('ivaDisplay').textContent = formatCurrency(iva);
+      document.getElementById('totalDisplay').textContent = formatCurrency(total);
+    }
+
+    function clearQuote() {
+      document.getElementById('itemsBody').innerHTML = '';
+      document.getElementById('clientName').value = '';
+      document.getElementById('clientContact').value = '';
+      document.getElementById('clientInfo').value = '';
+      addRow(1, '', 0);
+    }
+
+    // 3. Guardar y cargar datos editables de tu empresa en LocalStorage
+    function saveCompanyData() {
+      const data = {
+        name: document.getElementById('compName').innerHTML,
+        desc: document.getElementById('compDesc').innerHTML,
+        contact: document.getElementById('compContact').innerHTML
+      };
+      localStorage.setItem('cybernet_company_info', JSON.stringify(data));
+    }
+
+    function loadCompanyData() {
+      const saved = localStorage.getItem('cybernet_company_info');
+      if (saved) {
+        const data = JSON.parse(saved);
+        document.getElementById('compName').innerHTML = data.name;
+        document.getElementById('compDesc').innerHTML = data.desc;
+        document.getElementById('compContact').innerHTML = data.contact;
+      }
+    }
+
+    // 4. Configuración PWA: Service Worker en Blob y Evento de Instalación
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    const pwaStatus = document.getElementById('pwaStatus');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+      pwaStatus.textContent = 'Aplicación disponible para instalar en este dispositivo';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installBtn.style.display = 'none';
+        pwaStatus.textContent = 'Aplicación instalada correctamente';
+      }
+      deferredPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+      pwaStatus.textContent = 'Ejecutando como App instalada (Modo Offline activo)';
+    });
+
+    // Registro del Service Worker inline
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'cotizador-pwa-v1';
+        self.addEventListener('install', (event) => {
+          self.skipWaiting();
+          event.waitUntil(
+            caches.open(CACHE_NAME).then((cache) => {
+              return cache.addAll([self.location.href]).catch(() => {});
+            })
+          );
+        });
+        self.addEventListener('activate', (event) => {
+          event.waitUntil(self.clients.claim());
+        });
+        self.addEventListener('fetch', (event) => {
+          event.respondWith(
+            caches.match(event.request).then((response) => {
+              return response || fetch(event.request).then((fetchRes) => {
+                return caches.open(CACHE_NAME).then((cache) => {
+                  if (event.request.method === 'GET' && event.request.url.startsWith('http')) {
+                    cache.put(event.request, fetchRes.clone());
+                  }
+                  return fetchRes;
+                });
+              });
+            }).catch(() => caches.match(self.location.href))
+          );
+        });
+      `;
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(err => console.warn('SW info:', err));
+    }
+
+    // Inicialización
+    window.onload = () => {
+      loadCompanyData();
+      defaultItems.forEach(item => addRow(item.qty, item.desc, item.price));
+    };
+  </script>
+
+</body>
+</html>
