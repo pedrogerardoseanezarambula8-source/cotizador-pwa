@@ -85,6 +85,8 @@
       margin-bottom: 20px;
       font-size: 13px;
       color: var(--primary);
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .btn-install {
@@ -112,7 +114,6 @@
       padding-bottom: 20px;
       margin-bottom: 25px;
       gap: 15px;
-      flex-wrap: wrap;
     }
 
     .company-info h1 {
@@ -147,6 +148,7 @@
       border-radius: 4px;
       width: 130px;
       text-align: right;
+      font-size: 14px;
     }
 
     /* Datos del Cliente */
@@ -179,6 +181,8 @@
       border-radius: 6px;
       outline: none;
       font-size: 14px;
+      background: white;
+      width: 100%;
     }
 
     .form-group input:focus {
@@ -187,15 +191,14 @@
 
     /* Tabla de Conceptos */
     .table-container {
-      overflow-x: auto;
       margin-bottom: 20px;
+      width: 100%;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      min-width: 600px;
     }
 
     th {
@@ -222,21 +225,26 @@
       padding: 8px;
       border: 1px solid var(--border);
       border-radius: 4px;
+      font-size: 14px;
+      background: white;
     }
 
     input.num-input {
-      width: 90px;
+      width: 100%;
+      max-width: 100px;
       padding: 8px;
       border: 1px solid var(--border);
       border-radius: 4px;
       text-align: right;
+      font-size: 14px;
+      background: white;
     }
 
     .btn-danger {
       background: #ef4444;
       color: white;
       border: none;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
@@ -273,7 +281,6 @@
       margin-top: 20px;
       margin-bottom: 30px;
       gap: 20px;
-      flex-wrap: wrap;
     }
 
     .options-box {
@@ -284,6 +291,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      flex: 1;
       min-width: 250px;
     }
 
@@ -347,15 +355,15 @@
     .terms ul {
       list-style: inside disc;
       line-height: 1.6;
+      padding-left: 15px;
     }
 
-    /* Botones de Acción (Ocultos al Imprimir) */
+    /* Botones de Acción */
     .actions {
       margin-top: 30px;
       display: flex;
       justify-content: flex-end;
       gap: 15px;
-      flex-wrap: wrap;
     }
 
     .btn-clear {
@@ -367,6 +375,7 @@
       cursor: pointer;
       font-weight: 600;
       font-size: 14px;
+      transition: background 0.2s;
     }
 
     .btn-clear:hover {
@@ -389,6 +398,93 @@
       background: #059669;
     }
 
+    /* =========================================================
+       DISEÑO RESPONSIVO MÓVIL AVANZADO (TRANSFORMA TABLA EN TARJETAS)
+       ========================================================= */
+    @media (max-width: 768px) {
+      body {
+        padding: 8px;
+      }
+      .container {
+        padding: 15px 12px;
+        border-radius: 8px;
+      }
+      header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .quote-details {
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+      .quote-details input {
+        width: 110px;
+      }
+      .bottom-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .totals-box {
+        max-width: 100%;
+      }
+      .actions {
+        flex-direction: column-reverse;
+      }
+      .btn-clear, .btn-print, .btn-add {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Transformación de la tabla en tarjetas responsivas para móvil */
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead {
+        display: none; /* Ocultamos los encabezados horizontales de la tabla */
+      }
+      tr#emptyRow {
+        display: none;
+      }
+      #itemsBody tr {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      }
+      #itemsBody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: right !important;
+      }
+      #itemsBody td:last-child {
+        border-bottom: none;
+        justify-content: flex-end;
+        padding-top: 10px;
+      }
+      /* Etiquetas automáticas para cada campo en la tarjeta móvil */
+      #itemsBody td:nth-child(1)::before { content: "Cantidad:"; font-weight: 600; color: var(--text-muted); font-size: 13px; }
+      #itemsBody td:nth-child(2) { flex-direction: column; align-items: stretch; text-align: left !important; }
+      #itemsBody td:nth-child(2)::before { content: "Descripción:"; font-weight: 600; color: var(--text-muted); font-size: 13px; margin-bottom: 4px; }
+      #itemsBody td:nth-child(3)::before { content: "P. Unitario ($):"; font-weight: 600; color: var(--text-muted); font-size: 13px; }
+      #itemsBody td:nth-child(4)::before { content: "Subtotal ($):"; font-weight: 600; color: var(--text-muted); font-size: 13px; }
+      #itemsBody td:nth-child(5)::before { content: "Eliminar:"; font-weight: 600; color: var(--text-muted); font-size: 13px; }
+
+      input.num-input {
+        max-width: 120px;
+      }
+    }
+
     /* Estilos para impresión / PDF */
     @media print {
       body {
@@ -406,6 +502,10 @@
         display: none !important;
       }
       input {
+        border: none !important;
+        background: transparent !important;
+      }
+      .quote-details {
         border: none !important;
         background: transparent !important;
       }
@@ -430,17 +530,21 @@
       <div class="company-info">
         <h1 id="compName" contenteditable="true" onblur="saveCompanyData()">CyberNet Servicios Técnicos</h1>
         <p id="compDesc" contenteditable="true" onblur="saveCompanyData()">CCTV | Controles de Acceso | Redes | Cableado Estructurado</p>
-        <p id="compContact" contenteditable="true" onblur="saveCompanyData()">Contacto: soporte@tuempresa.com | Tel: (625) 000-0000</p>
+        <p id="compContact" contenteditable="true" onblur="saveCompanyData()">Contacto: cybernetcuauhtemoc@gmail.com | Tel: (629) 101-2012</p>
       </div>
       <div class="quote-details">
-        <h2>COTIZACIÓN</h2>
         <div>
-          <label>Folio #:</label>
-          <input type="text" id="folio" value="COT-1001">
+          <h2>COTIZACIÓN</h2>
         </div>
-        <div style="margin-top: 5px;">
-          <label>Fecha:</label>
-          <input type="date" id="fecha">
+        <div>
+          <div>
+            <label>Folio #:</label>
+            <input type="text" id="folio" value="COT-1001">
+          </div>
+          <div style="margin-top: 5px;">
+            <label>Fecha:</label>
+            <input type="date" id="fecha">
+          </div>
         </div>
       </div>
     </header>
@@ -551,7 +655,7 @@
         <td><input type="text" class="desc-input desc" value="${desc}" placeholder="Descripción del concepto..."></td>
         <td><input type="number" class="num-input price" value="${price}" step="0.01" min="0" oninput="calculateTotals()"></td>
         <td style="text-align: right; font-weight: 600;" class="row-subtotal">$0.00</td>
-        <td style="text-align: center;"><button type="button" class="btn-danger" onclick="removeRow(this)">✕</button></td>
+        <td style="text-align: center;"><button type="button" class="btn-danger" onclick="removeRow(this)">✕ Eliminar</button></td>
       `;
 
       tbody.appendChild(tr);
@@ -633,7 +737,7 @@
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = 'inline-block';
-      pwaStatus.textContent = 'Aplicación disponible para instalar en este dispositivo';
+      pwaStatus.textContent = 'Aplicación disponible para instalar';
     });
 
     installBtn.addEventListener('click', async () => {
@@ -655,7 +759,7 @@
     // Registro del Service Worker inline
     if ('serviceWorker' in navigator) {
       const swCode = `
-        const CACHE_NAME = 'cotizador-pwa-v1';
+        const CACHE_NAME = 'cotizador-pwa-v2';
         self.addEventListener('install', (event) => {
           self.skipWaiting();
           event.waitUntil(
@@ -690,6 +794,11 @@
     // Inicialización
     window.onload = () => {
       loadCompanyData();
+      defaultItems.setItem ? null : null;
+      // Si no hay datos guardados de empresa previamente, carga los predeterminados con el nuevo correo/tel
+      if (!localStorage.getItem('cybernet_company_info')) {
+        document.getElementById('compContact').innerHTML = 'Contacto: cybernetcuauhtemoc@gmail.com | Tel: (629) 101-2012';
+      }
       defaultItems.forEach(item => addRow(item.qty, item.desc, item.price));
     };
   </script>
